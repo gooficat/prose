@@ -9,26 +9,25 @@ BASENAMES = main
 SOURCES = $(addprefix $(SRC_DIR)/,$(addsuffix .$(EXT),$(BASENAMES)))
 OBJECTS = $(addprefix $(OBJ_DIR)/,$(addsuffix .o,$(BASENAMES)))
 
-CFLAGS = -Wall -Wextra -Wpedantic -std=c23 -fsanitize=address -O0 -g
+CFLAGS = -Wall -Wextra -Wpedantic -std=c23 -O0 -g
 
 TARGET = project
 
 launch: all run
 
 run:
-	./$(TARGET)
+	@./$(TARGET)
 
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) $^ -o $@
+	@$(CC) $(CFLAGS) $^ -o $@
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	mkdir -p $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+	@mkdir -p $(OBJ_DIR)
+	@$(CC) $(CFLAGS) -c $< -o $@
 
-run: $(TARGET)
-	./$(TARGET)
 
 clean:
-	rm -rf $(OBJ_DIR)
+	@rm -rf $(OBJ_DIR)
+	@rm ./$(TARGET)
