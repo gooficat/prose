@@ -1,7 +1,15 @@
-#include <stdio.h>
+
+#include "token.h"
 
 int main(void)
 {
-	printf("Hello, World!\n");
+	TokenStream stream = MakeStream("../tests/hello.prose");
+
+	while (stream.token.size)
+	{
+		printf("'%.*s'\n", stream.token.size, stream.token.data);
+		NextToken(&stream);
+	}
+
 	return 0;
 }
