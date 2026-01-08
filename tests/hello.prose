@@ -1,6 +1,4 @@
-main()
-{
-    meow = 32;
 
-    return meow;
-}
+let meow = 32;
+
+return meow;
