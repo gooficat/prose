@@ -1,0 +1,5 @@
+main() {
+    let i : i64 = 6767;
+    
+    return i;
+}

@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 4.1)
-project(my_project C)
+project(my_project CXX)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
-file(GLOB_RECURSE SRCS CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/*.c)
+file(GLOB_RECURSE SRCS CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/*.cxx)
 
 add_executable(my_project
 	${SRCS}
