@@ -1,1 +1,6 @@
-print "Hello, World!\n";
+main()
+{
+    meow = 32;
+
+    return meow;
+}

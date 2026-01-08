@@ -1,5 +1,6 @@
 
-#include "token.h"
+#include "ast.h"
+#include <token.h>
 
 int main(void)
 {

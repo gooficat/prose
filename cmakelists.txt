@@ -2,9 +2,11 @@ cmake_minimum_required(VERSION 4.1)
 project(my_project C)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
-
+include_directories(${CMAKE_SOURCE_DIR}/catlib)
+file(GLOB catlib ${CMAKE_SOURCE_DIR}/catlib/*.c)
 file(GLOB_RECURSE SRCS CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/*.c)
 
 add_executable(my_project
+	${catlib}
 	${SRCS}
 )
