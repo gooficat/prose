@@ -36,4 +36,4 @@
 		(v).data = realloc((v).data, sizeof((v).data[0]) * (v).capacity);                                              \
 	}
 
-#define at(i) data[i]
+#define delete_vector(v) free((v).data)

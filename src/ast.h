@@ -13,6 +13,7 @@
 #include <class.h>
 #include <types.h>
 
+#include "halloc.h"
 #include <token.h>
 #include <vector.h>
 
@@ -72,6 +73,7 @@ class(ASTAssignment)
 
 class(ASTRoot)
 {
+	HallocTracker halloc;
 	struct ASTScope body;
 };
 
@@ -113,13 +115,7 @@ class(ASTSingular)
 class(ASTNode)
 {
 	u8 type;
-	union {
-		ASTScope scope;
-		ASTFnDef fn_def;
-		ASTAssignment assignment;
-		ASTSingular singular;
-		ASTOperation operation;
-	};
+	void *node;
 };
 
 ASTRoot GenTree(TokenStream *stream);

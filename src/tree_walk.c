@@ -15,21 +15,7 @@ void PrintScope(const ASTScope scope);
 
 void PrintNode(const ASTNode node)
 {
-	switch (node.type)
-	{
-	case AST_ASSIGN:
-		printf("Assignment to %.*s:\n", node.assignment.to_what->name.size, node.assignment.to_what->name.data);
-		up_indent(1);
-		PrintNode(*node.assignment.value);
-		down_indent(1);
-		break;
-	case AST_FN_DEF:
-		printf("Function definition named %.*s\n", node.fn_def.name.size, node.fn_def.name.data);
-		up_indent(1);
-	case AST_SCOPE:
-		PrintScope(node.scope);
-		break;
-	}
+	//
 }
 
 void PrintScope(const ASTScope scope)

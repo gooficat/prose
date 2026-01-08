@@ -1,8 +1,6 @@
 #include "ast.h"
-#include "keywords.h"
 #include "token.h"
 #include "vector.h"
-#include <stdlib.h>
 
 /*
 		,.                 .,
@@ -67,49 +65,11 @@ ASTVarDef *FindVar(TokenStream *stream, ASTScope *scope)
 
 ASTSingular GenSingular(TokenStream *stream, ASTScope *scope)
 {
-	ASTSingular out;
-	if (isdigit(stream->token.data[0]))
-	{
-		out.type = AST_SINGULAR_LIT;
-		out.literal = NumberFromToken(&stream->token);
-	}
-	else
-	{
-		out.type = AST_SINGULAR_VAR;
-		out.var_ref.to_what = FindVar(stream, scope);
-	}
-	NextToken(stream);
-	return out;
+	//
 }
 
 ASTNode GenRValue(TokenStream *stream, ASTScope *scope)
 {
-	ASTNode out;
-	out.type = AST_SINGULAR;
-	out.singular = GenSingular(stream, scope);
-
-	if (IsOperator(stream->token.data[0]))
-	{
-		ASTOperation operation;
-		operation.base = malloc(sizeof(ASTNode));
-		*operation.base = out;
-		out.type = AST_OPERATION;
-		out.operation = operation;
-		do
-		{
-			ASTOperational operand;
-			operand.operation = stream->token.data[0];
-
-			NextToken(stream);
-
-			operand.base = malloc(sizeof(ASTNode));
-			operand.base->type = AST_SINGULAR;
-			operand.base->singular = GenSingular(stream, scope);
-
-		} while (IsOperator(stream->token.data[0]));
-	}
-
-	return out;
 }
 
 void GenVarDef(TokenStream *stream, ASTScope *scope)
@@ -124,17 +84,6 @@ void GenVarDef(TokenStream *stream, ASTScope *scope)
 	var = &scope->vars.data[scope->vars.size - 1];
 
 	NextToken(stream);
-
-	if (stream->token.data[0] == '=')
-	{
-		NextToken(stream);
-		ASTNode *node = malloc(sizeof(ASTNode));
-		node->type = AST_ASSIGN;
-		node->assignment.to_what = var;
-		node->assignment.value = malloc(sizeof(ASTNode));
-		*node->assignment.value = GenRValue(stream, scope);
-		push(scope->contents, node);
-	}
 }
 
 bool GenOrder(TokenStream *stream, ASTScope *parent)
@@ -157,12 +106,6 @@ ASTScope GenScope(TokenStream *stream, ASTScope *parent)
 	while (stream->token.size && stream->token.data[0] != '}')
 	{
 		printf("Token %.*s\n", stream->token.size, stream->token.data);
-
-		i8 kw = FindKeyword(stream->token.data);
-		if (kw)
-		{
-			//
-		}
 
 		NextToken(stream);
 	}
