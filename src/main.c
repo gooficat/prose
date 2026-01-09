@@ -6,7 +6,7 @@ int main()
 {
 	tok_stream_t stream = create_tok_stream("../prose/test.psm");
 
-	fetch_token_file(&stream);
+	fetch_token(&stream);
 
 	// while ()
 	printf("%s\n", stream.token);
