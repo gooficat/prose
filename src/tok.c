@@ -15,12 +15,12 @@ void get_tok( tok_stream_t* ts )
 		ts->c = fgetc( ts->f );
 	}
 
-	if ( isalnum( ts->c ) ) {
+	if ( isalnum( ts->c ) || ts->c == '_' ) {
 		unsigned char i = 0;
 		do {
 			ts->tok[ i++ ] = ts->c;
 			ts->c = fgetc( ts->f );
-		} while ( isalnum( ts->c ) );
+		} while ( isalnum( ts->c ) || ts->c == '_' );
 		ts->tok[ i ] = '\0';
 	} else if ( ts->c != EOF ) {
 		ts->tok[ 0 ] = ts->c;

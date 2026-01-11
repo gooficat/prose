@@ -36,9 +36,10 @@ void prose_psh( prose_vm_t* vm, uint64_t val )
 
 void prose_jmp_rel( prose_vm_t* vm )
 {
-	++vm->pc;
-	vm->pc += (int8_t)vm->rom->data[ vm->pc ] +
-			  1;  // simulate the pc being at the end of the current
+	uint64_t prev_dbg_pc = vm->pc;
+	vm->pc += (int8_t)vm->rom->data[ vm->pc + 1 ] +
+			  2;  // simulate the pc being at the end of the current
+	printf( "Jumped to %llu from %llu\n", vm->pc, prev_dbg_pc );
 }
 void prose_psh_imm( prose_vm_t* vm )
 {

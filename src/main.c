@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 #include "asm/asm.h"
 #include "asm/backends/backends.h"
@@ -28,25 +29,24 @@ int main()
 	// }
 	// printf( "%llu tokens\n", tok - tokens );
 
-	// prose_rom_t* rom;
-	// prose_vm_t vm = init_prose_vm( 32 );
-	// {
-	// 	uint8_t program[] = {
-	// 		PROSE_PSH_IMM, 0x01, 0x00, 0x00,		  0x00,
-	// 		0x00,		   0x00, 0x00, 0x00,		  PROSE_PSH_IMM,
-	// 		0x0A,		   0x00, 0x00, 0x00,		  0x00,
-	// 		0x00,		   0x00, 0x00, PROSE_ADD_TOP, PROSE_SWP_STK,
-	// 		0xFF,		   0xFF, 0xFF, 0xFF,		  0xFF,
-	// 		0xFF,		   0xFF, 0xFF, PROSE_HLT_CPU,
-	// 	};
-	// 	rom = malloc( sizeof( prose_rom_t ) + sizeof( program ) );
-	// 	rom->entry = 0;
-	// 	rom->size = sizeof( program );
-	// 	memcpy( rom->data, program, rom->size );
-	// }
-	// prose_load_rom( &vm, rom );
-	// prose_execute( &vm );
+	prose_rom_t* rom;
+	prose_vm_t vm = init_prose_vm( 32 );
+	{
+		FILE* f;
+		fopen_s( &f, "C:\\Users\\User\\Documents\\c\\prose\\prose\\output.bin",
+				 "rb" );
+		fseek( f, 0, SEEK_END );
+		uint64_t program_len = ftell( f );
+		rom = malloc( sizeof( prose_rom_t ) + program_len );
+		rom->entry = 0;
+		rom->size = program_len;
+		fseek( f, 0l, SEEK_SET );
+		fread( rom->data, 1llu, rom->size, f );
+		fclose( f );
+	}
+	prose_load_rom( &vm, rom );
+	prose_execute( &vm );
 
-	// free( rom );
-	// delete_prose_vm( &vm );
+	free( rom );
+	delete_prose_vm( &vm );
 }

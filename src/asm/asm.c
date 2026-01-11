@@ -57,6 +57,8 @@ void asm_pass( asm_block_t* bk )
 				skip_c( &bk->ts );
 			} while ( bk->ts.c != '\n' && bk->ts.c != EOF );
 		} else {
+			printf( "Supposed to be instruction %s, %c\n", bk->ts.tok,
+					bk->ts.c );
 			backend_handle_ins( bk );
 		}
 	}
@@ -70,7 +72,6 @@ void assemble( const char* in_path, const char* out_path )
 	bk.ts = create_tok_stream( in_path );
 	bk.pass = PASS_LABEL;
 	bk.labels = vec_init( lab_t, uint16_t );
-	bk.offs = 0;
 	fopen_s( &bk.out, out_path, "wb" );
 	fflush( bk.out );
 
@@ -79,6 +80,12 @@ void assemble( const char* in_path, const char* out_path )
 		rewind_tok_stream( &bk.ts );
 	} while ( bk.pass != PASS_DONE );
 	fclose( bk.out );
+
+	close_tok_stream( &bk.ts );
+	for ( size_t i = 0; i != bk.labels.size; ++i ) {
+		free( bk.labels.data[ i ].name );
+	}
+	free( bk.labels.data );
 }
 
 int64_t num_or_label( asm_block_t* bk )
