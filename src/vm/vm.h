@@ -11,6 +11,7 @@ enum {	// instruction set!
 	PROSE_SUB_TOP = 0x05,
 	PROSE_MUL_TOP = 0x06,
 	PROSE_DIV_TOP = 0x07,
+	PROSE_SWP_STK = 0x08,
 };
 
 typedef enum {

@@ -26,13 +26,15 @@ int main()
 	// }
 	// printf( "%llu tokens\n", tok - tokens );
 	prose_rom_t* rom;
-	prose_vm_t vm = init_prose_vm( 8 );
+	prose_vm_t vm = init_prose_vm( 32 );
 	{
 		uint8_t program[] = {
 			PROSE_PSH_IMM, 0x01, 0x00, 0x00,		  0x00,
 			0x00,		   0x00, 0x00, 0x00,		  PROSE_PSH_IMM,
 			0x0A,		   0x00, 0x00, 0x00,		  0x00,
-			0x00,		   0x00, 0x00, PROSE_ADD_TOP, PROSE_HLT_CPU,
+			0x00,		   0x00, 0x00, PROSE_ADD_TOP, PROSE_SWP_STK,
+			0x01,		   0x00, 0x00, 0x00,		  0x00,
+			0x00,		   0x00, 0x00, PROSE_HLT_CPU,
 		};
 		rom = malloc( sizeof( prose_rom_t ) + sizeof( program ) );
 		rom->entry = 0;

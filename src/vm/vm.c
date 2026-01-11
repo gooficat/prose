@@ -36,11 +36,13 @@ void prose_psh( prose_vm_t* vm, uint64_t val )
 
 void prose_jmp_rel( prose_vm_t* vm )
 {
-	vm->pc += (int8_t)vm->rom->data[ ++vm->pc ];
+	++vm->pc;
+	vm->pc += (int8_t)vm->rom->data[ vm->pc ];
 }
 void prose_psh_imm( prose_vm_t* vm )
 {
-	prose_psh( vm, *(uint64_t*)&vm->rom->data[ ++vm->pc ] );
+	++vm->pc;
+	prose_psh( vm, *(uint64_t*)&vm->rom->data[ vm->pc ] );
 	vm->pc += 8;
 }
 void prose_pop( prose_vm_t* vm )
@@ -75,11 +77,21 @@ void prose_pop_off( prose_vm_t* vm )
 	prose_pop( vm );
 }
 
+void prose_swp_stk( prose_vm_t* vm )
+{
+	++vm->pc;
+	uint64_t tmp = vm->stack[ vm->sp ];
+	uint64_t si = vm->sp + *(int64_t*)&vm->rom->data[ vm->pc ];
+	vm->stack[ vm->sp ] = vm->stack[ si ];
+	vm->stack[ si ] = tmp;
+	vm->pc += 8;
+}
+
 void print_vm_stack( prose_vm_t* vm )
 {
 	printf( "Prose VM stack (%llu words):\n", vm->stack_size );
 	for ( uint64_t i = 0; i != vm->stack_size; ++i ) {
-		printf( "%llu,\n", vm->stack[ i ] );
+		printf( "%016llx: %llu,\n", i, vm->stack[ i ] );
 	}
 }
 
@@ -127,10 +139,16 @@ void prose_execute( prose_vm_t* vm )
 			puts( "div top\n" );
 			prose_div_top( vm );
 			break;
+		case PROSE_SWP_STK:
+			puts( "swp stk\n" );
+			prose_swp_stk( vm );
+			break;
 		case PROSE_HLT_CPU:
 			vm->escape_condition = PROSE_COND_HALT;
+			break;
 		default:
-			break;	// halt / exception
+			vm->escape_condition = PROSE_COND_EXCP;
+			break;
 		}
 		// print_vm_state( vm );
 		++vm->cc;
