@@ -58,8 +58,8 @@ void asm_pass( asm_block_t* bk )
 			} while ( bk->ts.c != '\n' && bk->ts.c != EOF );
 		} else {
 			// printf( "Supposed to be instruction %s, %c\n", bk->ts.tok,
-					bk->ts.c );
-					backend_handle_ins( bk );
+			// bk->ts.c );
+			backend_handle_ins( bk );
 		}
 	}
 	// printf( "Finished %i pass, now on %i\n", bk->pass, next_pass );

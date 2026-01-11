@@ -27,11 +27,12 @@ void prose_load_rom( prose_vm_t* vm, prose_rom_t* rom )
 
 void prose_psh( prose_vm_t* vm, uint64_t val )
 {
-	if ( vm->sp <= 0 ) {
-		vm->escape_condition = PROSE_COND_EXCP;
-	}
+
 	--vm->sp;
-	vm->stack[ vm->sp ] = val;
+	if ( vm->sp < 0 ) {
+		vm->escape_condition = PROSE_COND_EXCP;
+	} else
+		vm->stack[ vm->sp ] = val;
 }
 
 void prose_jmp_rel( prose_vm_t* vm )
@@ -51,6 +52,9 @@ void prose_pop( prose_vm_t* vm )
 {
 	// vm->stack[ vm->sp ];
 	++vm->sp;
+	if ( vm->sp > vm->stack_size ) {
+		vm->escape_condition = PROSE_COND_EXCP;
+	}
 }
 void prose_add_top( prose_vm_t* vm )
 {
