@@ -46,3 +46,9 @@ void close_tok_stream( tok_stream_t* ts )
 {
 	fclose( ts->f );
 }
+
+void rewind_tok_stream( tok_stream_t* ts )
+{
+	rewind( ts->f );
+	ts->c = fgetc( ts->f );
+}

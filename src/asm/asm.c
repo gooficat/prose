@@ -26,7 +26,7 @@ void asm_pass( asm_block_t* bk )
 {
 	bk->offs = 0;
 	printf( "Pass %i\n", bk->pass );
-	asm_pass_t pass = PASS_WRITE;
+	asm_pass_t next_pass = bk->pass + 1;
 	get_tok( &bk->ts );
 	while ( bk->ts.tok[ 0 ] ) {
 
@@ -37,10 +37,11 @@ void asm_pass( asm_block_t* bk )
 				label.name = _strdup( bk->ts.tok );
 				label.offs = bk->offs;
 				vec_push( bk->labels ) label;
-			} else {
+			} else if ( bk->pass == PASS_ALIGN ) {
 				lab_t* label = find_label( bk, bk->ts.tok );
-				if ( bk->pass == PASS_ALIGN && label->offs != bk->offs ) {
-					pass = PASS_ALIGN;
+				if ( label->offs != bk->offs ) {
+					if ( bk->pass == PASS_ALIGN )
+						next_pass = PASS_ALIGN;
 					label->offs = bk->offs;
 				}
 			}
@@ -58,16 +59,9 @@ void asm_pass( asm_block_t* bk )
 		} else {
 			backend_handle_ins( bk );
 		}
-
-		printf( "%s\t", bk->ts.tok );
 	}
-	if ( bk->pass == PASS_LABEL ) {
-		bk->pass = PASS_ALIGN;
-	} else if ( pass == PASS_WRITE && bk->pass == PASS_WRITE ) {
-		bk->pass = PASS_DONE;
-	} else {
-		bk->pass = pass;
-	}
+	printf( "Finished %i pass, now on %i\n", bk->pass, next_pass );
+	bk->pass = next_pass;
 }
 
 void assemble( const char* in_path, const char* out_path )
@@ -78,9 +72,11 @@ void assemble( const char* in_path, const char* out_path )
 	bk.labels = vec_init( lab_t, uint16_t );
 	bk.offs = 0;
 	fopen_s( &bk.out, out_path, "wb" );
+	fflush( bk.out );
 
 	do {
 		asm_pass( &bk );
+		rewind_tok_stream( &bk.ts );
 	} while ( bk.pass != PASS_DONE );
 	fclose( bk.out );
 }

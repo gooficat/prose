@@ -19,3 +19,5 @@ void close_tok_stream( tok_stream_t* ts );
 void skip_c( tok_stream_t* ts );
 
 void skip_wsp( tok_stream_t* ts );
+
+void rewind_tok_stream( tok_stream_t* ts );
