@@ -8,18 +8,18 @@ ColumnLimit: 80
 BreakBeforeBraces: Custom
 BraceWrapping:
   AfterFunction: true
-  AfterClass: false
-  AfterStruct: false
+  AfterClass: true
+  AfterStruct: true
   AfterUnion: true
   AfterNamespace: true
 
   # Keep conditionals attached
-  AfterControlStatement: false
-  AfterEnum: false
-  AfterExternBlock: false
-  AfterObjCDeclaration: false
-  BeforeElse: false
-  BeforeCatch: false
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterExternBlock: true
+  AfterObjCDeclaration: true
+  BeforeElse: true
+  BeforeCatch: true
 
 AllowShortIfStatementsOnASingleLine: false
 AllowShortBlocksOnASingleLine: Empty

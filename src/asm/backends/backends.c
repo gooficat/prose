@@ -15,8 +15,10 @@ void backend_handle_ins( asm_block_t* bk )
 
 void set_backend( const char* name )
 {
-	for ( uint8_t i = 0; i != sizeof( backends ) / sizeof( backend_t ); ++i ) {
-		if ( !strcmp( name, backends[ i ].name ) ) {
+	for ( uint8_t i = 0; i != sizeof( backends ) / sizeof( backend_t ); ++i )
+	{
+		if ( !strcmp( name, backends[ i ].name ) )
+		{
 			current_backend = &backends[ i ];
 		}
 	}

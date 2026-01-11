@@ -11,22 +11,28 @@ tok_stream_t create_tok_stream( const char* path )
 
 void get_tok( tok_stream_t* ts )
 {
-	while ( isspace( ts->c ) ) {
+	while ( isspace( ts->c ) )
+	{
 		ts->c = fgetc( ts->f );
 	}
 
-	if ( isalnum( ts->c ) || ts->c == '_' ) {
+	if ( isalnum( ts->c ) || ts->c == '_' )
+	{
 		unsigned char i = 0;
-		do {
+		do
+		{
 			ts->tok[ i++ ] = ts->c;
 			ts->c = fgetc( ts->f );
 		} while ( isalnum( ts->c ) || ts->c == '_' );
 		ts->tok[ i ] = '\0';
-	} else if ( ts->c != EOF ) {
+	}
+	else if ( ts->c != EOF )
+	{
 		ts->tok[ 0 ] = ts->c;
 		ts->tok[ 1 ] = '\0';
 		ts->c = fgetc( ts->f );
-	} else
+	}
+	else
 		ts->tok[ 0 ] = '\0';
 }
 
@@ -37,7 +43,8 @@ void skip_c( tok_stream_t* ts )
 
 void skip_wsp( tok_stream_t* ts )
 {
-	while ( isspace( ts->c ) ) {
+	while ( isspace( ts->c ) )
+	{
 		ts->c = getc( ts->f );
 	}
 }

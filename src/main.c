@@ -9,7 +9,7 @@
 int main()
 {
 	set_backend( "prose" );
-	assemble( "C:\\Users\\User\\Documents\\c\\prose\\prose\\test.ps",
+	assemble( "C:\\Users\\User\\Documents\\c\\prose\\prose\\fib.ps",
 			  "C:\\Users\\User\\Documents\\c\\prose\\prose\\output.bin" );
 
 	// tok_stream_t ts = create_tok_stream(

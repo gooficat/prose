@@ -8,13 +8,15 @@
 
 #define PRSM_MNEM_MAX 8
 
-typedef enum {
+typedef enum
+{
 	PRSM_ARG_NON,
 	PRSM_ARG_IMM,
 	PRSM_ARG_MEM,
 } prsm_arg_type_t;
 
-typedef struct {
+typedef struct
+{
 	prsm_arg_type_t type;
 	union
 	{
@@ -23,19 +25,22 @@ typedef struct {
 	};
 } prsm_arg_t;
 
-typedef struct {
+typedef struct
+{
 	char mnem[ PRSM_MNEM_MAX ];
 	prsm_arg_t arg;
 } prsm_ins_t;
 
-typedef enum {
+typedef enum
+{
 	PRSM_PROF_IMPL,
 	PRSM_PROF_SOFF,
 	PRSM_PROF_IMMQ,
 	PRSM_PROF_RELB,
 } prsm_prof_t;
 
-typedef struct {
+typedef struct
+{
 	const char* mnem;
 	uint8_t code;
 	prsm_prof_t prof;
@@ -79,17 +84,20 @@ static const prsm_opc_t prsm_ops[] = {
 bool prsm_prof_match( asm_block_t* bk, const prsm_ins_t* ins,
 					  const prsm_opc_t* opc )
 {
-	switch ( ins->arg.type ) {
+	switch ( ins->arg.type )
+	{
 	case PRSM_ARG_NON:
 		return ( opc->prof == PRSM_PROF_IMPL );
 	case PRSM_ARG_IMM:
 		return opc->prof == PRSM_PROF_IMMQ;
 	case PRSM_ARG_MEM:
-		if ( opc->prof == PRSM_PROF_RELB ) {
+		if ( opc->prof == PRSM_PROF_RELB )
+		{
 			int64_t rel = ins->arg.ival - ( bk->offs + 2 );
 			return ( bk->pass == PASS_LABEL || rel <= INT8_MAX ||
 					 rel >= INT8_MIN );
-		} else
+		}
+		else
 			return opc->prof == PRSM_PROF_SOFF;
 	}
 }
@@ -97,9 +105,11 @@ bool prsm_prof_match( asm_block_t* bk, const prsm_ins_t* ins,
 const prsm_opc_t* prsm_find_opc( asm_block_t* bk, const prsm_ins_t* ins )
 {
 	for ( uint8_t i = 0; i != sizeof( prsm_ops ) / sizeof( prsm_ops[ 0 ] );
-		  ++i ) {
+		  ++i )
+	{
 		if ( !strcmp( ins->mnem, prsm_ops[ i ].mnem ) &&
-			 prsm_prof_match( bk, ins, &prsm_ops[ i ] ) ) {
+			 prsm_prof_match( bk, ins, &prsm_ops[ i ] ) )
+		{
 			return &prsm_ops[ i ];
 		}
 	}
@@ -113,29 +123,28 @@ void prsm_encode( asm_block_t* bk, prsm_ins_t* ins )
 	const prsm_opc_t* opc = prsm_find_opc( bk, ins );
 
 	// puts( "Encoding\n" );
-	if ( bk->pass == PASS_WRITE ) {
+	if ( bk->pass == PASS_WRITE )
+	{
 		fputc( opc->code, bk->out );
 	}
 
-	switch ( opc->prof ) {
+	switch ( opc->prof )
+	{
 	case PRSM_PROF_IMPL:
-		if ( bk->pass == PASS_WRITE ) {
-			++bk->offs;
-		}
+		++bk->offs;
 		break;
 	case PRSM_PROF_RELB:
-		if ( bk->pass == PASS_WRITE ) {
+		if ( bk->pass == PASS_WRITE )
+		{
 			fputc( ( ins->arg.ival - ( bk->offs + 2 ) ) & 0xFF, bk->out );
 		}
 		bk->offs += 2;
 		break;
 	case PRSM_PROF_IMMQ:
 	case PRSM_PROF_SOFF:
-		if ( bk->pass == PASS_WRITE ) {
-			// printf( "writing\n" );
-			for ( uint8_t i = 0; i != sizeof( uint64_t ); ++i ) {
-				fputc( ( ins->arg.ival >> ( 8 * i ) ) & 0xFF, bk->out );
-			}
+		if ( bk->pass == PASS_WRITE )
+		{
+			fwrite( &ins->arg.ival, sizeof( ins->arg.ival ), 1, bk->out );
 		}
 		bk->offs += 9;
 		break;
@@ -149,16 +158,21 @@ void prsm_handle_ins( asm_block_t* bk )
 	strcpy_s( ins.mnem, PRSM_MNEM_MAX, bk->ts.tok );
 	// printf( "Instruction %s\n", ins.mnem );
 	skip_wsp( &bk->ts );
-	if ( bk->ts.c == '$' ) {
+	if ( bk->ts.c == '$' )
+	{
 		ins.arg.type = PRSM_ARG_MEM;
 		skip_c( &bk->ts );
 		get_tok( &bk->ts );
 		ins.arg.ival = num_or_label( bk );
-	} else if ( isdigit( bk->ts.c ) ) {
+	}
+	else if ( isdigit( bk->ts.c ) )
+	{
 		ins.arg.type = PRSM_ARG_IMM;
 		get_tok( &bk->ts );
 		ins.arg.ival = num_or_label( bk );
-	} else {
+	}
+	else
+	{
 		ins.arg.type = PRSM_ARG_NON;
 	}
 	get_tok( &bk->ts );
