@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include "mem.h"
 #include "tok.h"
 typedef enum
 {
@@ -19,24 +20,15 @@ typedef enum
 	AST_NODE_SLIT,
 } ast_node_type_t;
 
-typedef struct ast_node_t
+typedef struct
 {
 	ast_node_type_t type;
-	union
-	{
-		uintmax_t uval;
-		intmax_t ival;
-		char* sval;
-		//
-	};
-	char modifier;
-	struct ast_node_t* chain;
 } ast_node_t;
 
 typedef struct
 {
-	ast_node_t* tree;
-	//
+	ast_node_t root;
+	mem_tracker_t mt;
 } ast_block_t;
 
-ast_node_t* gen_tree( tok_stream_t* ts );
+ast_block_t gen_tree( tok_stream_t* ts );
