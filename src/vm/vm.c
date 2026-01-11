@@ -27,12 +27,10 @@ void prose_load_rom( prose_vm_t* vm, prose_rom_t* rom )
 
 void prose_psh( prose_vm_t* vm, uint64_t val )
 {
-
-	--vm->sp;
-	if ( vm->sp < 0 ) {
+	if ( vm->sp <= 0 ) {
 		vm->escape_condition = PROSE_COND_EXCP;
 	} else
-		vm->stack[ vm->sp ] = val;
+		vm->stack[ --vm->sp ] = val;
 }
 
 void prose_jmp_rel( prose_vm_t* vm )
