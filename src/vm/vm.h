@@ -31,6 +31,7 @@ typedef struct {
 	uint64_t sp;
 	uint64_t bp;
 	uint64_t pc;
+	uint64_t cc;
 	prose_rom_t* rom;
 
 	prose_escape_condition_t escape_condition;
