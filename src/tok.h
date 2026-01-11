@@ -13,3 +13,7 @@ typedef struct {
 tok_stream_t create_tok_stream( const char* path );
 
 void get_tok( tok_stream_t* ts );
+
+void close_tok_stream( tok_stream_t* ts );
+
+void skip_c( tok_stream_t* ts );

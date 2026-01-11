@@ -29,3 +29,13 @@ void get_tok( tok_stream_t* ts )
 	} else
 		ts->tok[ 0 ] = '\0';
 }
+
+void skip_c( tok_stream_t* ts )
+{
+	ts->c = fgetc( ts->f );
+}
+
+void close_tok_stream( tok_stream_t* ts )
+{
+	fclose( ts->f );
+}
