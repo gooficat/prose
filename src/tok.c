@@ -35,6 +35,13 @@ void skip_c( tok_stream_t* ts )
 	ts->c = fgetc( ts->f );
 }
 
+void skip_wsp( tok_stream_t* ts )
+{
+	while ( isspace( ts->c ) ) {
+		ts->c = getc( ts->f );
+	}
+}
+
 void close_tok_stream( tok_stream_t* ts )
 {
 	fclose( ts->f );

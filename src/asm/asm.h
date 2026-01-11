@@ -26,4 +26,6 @@ typedef struct {
 	asm_pass_t pass;
 } asm_block_t;
 
+lab_t* find_label( asm_block_t* bk, const char* name );
+
 void assemble( const char* in_path, const char* out_path );

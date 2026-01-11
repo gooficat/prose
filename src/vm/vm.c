@@ -37,7 +37,8 @@ void prose_psh( prose_vm_t* vm, uint64_t val )
 void prose_jmp_rel( prose_vm_t* vm )
 {
 	++vm->pc;
-	vm->pc += (int8_t)vm->rom->data[ vm->pc ];
+	vm->pc += (int8_t)vm->rom->data[ vm->pc ] +
+			  1;  // simulate the pc being at the end of the current
 }
 void prose_psh_imm( prose_vm_t* vm )
 {
@@ -68,7 +69,34 @@ void prose_mul_top( prose_vm_t* vm )
 void prose_div_top( prose_vm_t* vm )
 {
 	++vm->pc;
-	prose_psh( vm, vm->stack[ vm->sp ] / vm->stack[ vm->sp + 1 ] );
+	if ( !vm->stack[ vm->sp + 1 ] ) {
+		vm->escape_condition = PROSE_COND_EXCP;
+	} else
+		prose_psh( vm, vm->stack[ vm->sp ] / vm->stack[ vm->sp + 1 ] );
+}
+
+void prose_iad_top( prose_vm_t* vm )
+{
+	++vm->pc;
+	prose_psh( vm, (int64_t)vm->stack[ vm->sp ] + vm->stack[ vm->sp + 1 ] );
+}
+void prose_isb_top( prose_vm_t* vm )
+{
+	++vm->pc;
+	prose_psh( vm, (int64_t)vm->stack[ vm->sp ] - vm->stack[ vm->sp + 1 ] );
+}
+void prose_iml_top( prose_vm_t* vm )
+{
+	++vm->pc;
+	prose_psh( vm, (int64_t)vm->stack[ vm->sp ] * vm->stack[ vm->sp + 1 ] );
+}
+void prose_idv_top( prose_vm_t* vm )
+{
+	++vm->pc;
+	if ( !vm->stack[ vm->sp + 1 ] ) {
+		vm->escape_condition = PROSE_COND_EXCP;
+	} else
+		prose_psh( vm, (int64_t)vm->stack[ vm->sp ] / vm->stack[ vm->sp + 1 ] );
 }
 
 void prose_pop_off( prose_vm_t* vm )
@@ -85,6 +113,25 @@ void prose_swp_stk( prose_vm_t* vm )
 	vm->stack[ vm->sp ] = vm->stack[ si ];
 	vm->stack[ si ] = tmp;
 	vm->pc += 8;
+}
+
+void prose_jmp_ifz( prose_vm_t* vm )
+{
+	if ( !vm->stack[ vm->sp ] ) {
+		prose_jmp_rel( vm );
+	}
+}
+void prose_jmp_ifp( prose_vm_t* vm )
+{
+	if ( (int64_t)vm->stack[ vm->sp ] > 0 ) {
+		prose_jmp_rel( vm );
+	}
+}
+void prose_jmp_ifn( prose_vm_t* vm )
+{
+	if ( (int64_t)vm->stack[ vm->sp ] < 0 ) {
+		prose_jmp_rel( vm );
+	}
 }
 
 void print_vm_stack( prose_vm_t* vm )
@@ -139,18 +186,45 @@ void prose_execute( prose_vm_t* vm )
 			puts( "div top\n" );
 			prose_div_top( vm );
 			break;
+		case PROSE_HLT_CPU:
+			vm->escape_condition = PROSE_COND_HALT;
+			break;
 		case PROSE_SWP_STK:
 			puts( "swp stk\n" );
 			prose_swp_stk( vm );
 			break;
-		case PROSE_HLT_CPU:
-			vm->escape_condition = PROSE_COND_HALT;
+		case PROSE_JMP_IFZ:
+			puts( "jmp ifz\n" );
+			prose_jmp_ifz( vm );
+			break;
+		case PROSE_JMP_IFN:
+			puts( "jmp ifn\n" );
+			prose_jmp_ifn( vm );
+			break;
+		case PROSE_JMP_IFP:
+			puts( "jmp ifp\n" );
+			prose_jmp_ifp( vm );
+			break;
+		case PROSE_IAD_TOP:
+			puts( "iad top\n" );
+			prose_iad_top( vm );
+			break;
+		case PROSE_ISB_TOP:
+			puts( "isb top\n" );
+			prose_isb_top( vm );
+			break;
+		case PROSE_IML_TOP:
+			puts( "iml top\n" );
+			prose_iml_top( vm );
+			break;
+		case PROSE_IDV_TOP:
+			puts( "idv top\n" );
+			prose_idv_top( vm );
 			break;
 		default:
 			vm->escape_condition = PROSE_COND_EXCP;
 			break;
 		}
-		// print_vm_state( vm );
 		++vm->cc;
 	}
 	switch ( vm->escape_condition ) {
