@@ -29,3 +29,6 @@ typedef struct {
 lab_t* find_label( asm_block_t* bk, const char* name );
 
 void assemble( const char* in_path, const char* out_path );
+
+int64_t num_or_label( asm_block_t* bk );
+uint64_t unum_or_label( asm_block_t* bk );

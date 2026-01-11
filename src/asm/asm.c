@@ -1,6 +1,8 @@
 #include "asm.h"
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include "backends/backends.h"
 #include "tok.h"
 #include "vec.h"
 
@@ -17,13 +19,16 @@ lab_t* find_label( asm_block_t* bk, const char* name )
 void handle_directive( asm_block_t* bk )
 {
 	printf( "Encountered directive '%s'\n", bk->ts.tok );
+	get_tok( &bk->ts );
 }
 
 void asm_pass( asm_block_t* bk )
 {
 	bk->offs = 0;
-	while ( bk->ts.c != EOF ) {
-		get_tok( &bk->ts );
+	printf( "Pass %i\n", bk->pass );
+	asm_pass_t pass = PASS_WRITE;
+	get_tok( &bk->ts );
+	while ( bk->ts.tok[ 0 ] ) {
 
 		if ( bk->ts.c == ':' ) {
 			printf( "Encountered label '%s'\n", bk->ts.tok );
@@ -34,29 +39,35 @@ void asm_pass( asm_block_t* bk )
 				vec_push( bk->labels ) label;
 			} else {
 				lab_t* label = find_label( bk, bk->ts.tok );
-				label->offs = bk->offs;
+				if ( bk->pass == PASS_ALIGN && label->offs != bk->offs ) {
+					pass = PASS_ALIGN;
+					label->offs = bk->offs;
+				}
 			}
 			printf( "Set label offset to %llu\n", bk->offs );
 
 			skip_c( &bk->ts );
 			get_tok( &bk->ts );
-		}
-
-		if ( bk->ts.tok[ 0 ] == '.' ) {
+		} else if ( bk->ts.tok[ 0 ] == '.' ) {
 			get_tok( &bk->ts );
 			handle_directive( bk );
-		}
-
-		if ( bk->ts.tok[ 0 ] == '#' ) {
+		} else if ( bk->ts.tok[ 0 ] == '#' ) {
 			do {
 				skip_c( &bk->ts );
 			} while ( bk->ts.c != '\n' && bk->ts.c != EOF );
+		} else {
+			backend_handle_ins( bk );
 		}
 
-		// printf( "%s\t", bk->ts.tok );
+		printf( "%s\t", bk->ts.tok );
 	}
-	// for debug
-	++bk->pass;
+	if ( bk->pass == PASS_LABEL ) {
+		bk->pass = PASS_ALIGN;
+	} else if ( pass == PASS_WRITE && bk->pass == PASS_WRITE ) {
+		bk->pass = PASS_DONE;
+	} else {
+		bk->pass = pass;
+	}
 }
 
 void assemble( const char* in_path, const char* out_path )
@@ -72,4 +83,19 @@ void assemble( const char* in_path, const char* out_path )
 		asm_pass( &bk );
 	} while ( bk.pass != PASS_DONE );
 	fclose( bk.out );
+}
+
+int64_t num_or_label( asm_block_t* bk )
+{
+	int64_t v;
+	if ( isalpha( bk->ts.tok[ 0 ] ) ) {
+		if ( bk->pass == PASS_LABEL ) {
+			v = 0;
+		} else {
+			v = find_label( bk, bk->ts.tok )->offs;
+		}
+	} else {
+		v = strtoll( bk->ts.tok, NULL, 0 );
+	}
+	return v;  // TODO arithmetic
 }
