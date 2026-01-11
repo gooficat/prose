@@ -99,8 +99,8 @@ void assemble( const char* in_path, const char* out_path )
 	}
 	free( bk.labels.data );
 }
-// i don't know why, but it doesn't work. do not use it
-void put_bytes( asm_block_t* bk, const uint8_t* v, size_t n )
+
+void put_bytes( asm_block_t* bk, const void* v, size_t n )
 {
 	if ( bk->pass == PASS_WRITE )
 	{
@@ -108,6 +108,7 @@ void put_bytes( asm_block_t* bk, const uint8_t* v, size_t n )
 	}
 	bk->offs += n;
 }
+
 void put_byte( asm_block_t* bk, const uint8_t v )
 {
 	if ( bk->pass == PASS_WRITE )
