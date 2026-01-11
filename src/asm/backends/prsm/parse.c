@@ -112,7 +112,7 @@ void prsm_encode( asm_block_t* bk, prsm_ins_t* ins )
 {
 	const prsm_opc_t* opc = prsm_find_opc( bk, ins );
 
-	puts( "Encoding\n" );
+	// puts( "Encoding\n" );
 	if ( bk->pass == PASS_WRITE ) {
 		fputc( opc->code, bk->out );
 	}
@@ -132,7 +132,7 @@ void prsm_encode( asm_block_t* bk, prsm_ins_t* ins )
 	case PRSM_PROF_IMMQ:
 	case PRSM_PROF_SOFF:
 		if ( bk->pass == PASS_WRITE ) {
-			printf( "writing\n" );
+			// printf( "writing\n" );
 			for ( uint8_t i = 0; i != sizeof( uint64_t ); ++i ) {
 				fputc( ( ins->arg.ival >> ( 8 * i ) ) & 0xFF, bk->out );
 			}
@@ -140,14 +140,14 @@ void prsm_encode( asm_block_t* bk, prsm_ins_t* ins )
 		bk->offs += 9;
 		break;
 	}
-	printf( "Encoding finished, offset %llu\n", bk->offs );
+	// printf( "Encoding finished, offset %llu\n", bk->offs );
 }
 
 void prsm_handle_ins( asm_block_t* bk )
 {
 	prsm_ins_t ins;
 	strcpy_s( ins.mnem, PRSM_MNEM_MAX, bk->ts.tok );
-	printf( "Instruction %s\n", ins.mnem );
+	// printf( "Instruction %s\n", ins.mnem );
 	skip_wsp( &bk->ts );
 	if ( bk->ts.c == '$' ) {
 		ins.arg.type = PRSM_ARG_MEM;

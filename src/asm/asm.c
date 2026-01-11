@@ -18,20 +18,20 @@ lab_t* find_label( asm_block_t* bk, const char* name )
 
 void handle_directive( asm_block_t* bk )
 {
-	printf( "Encountered directive '%s'\n", bk->ts.tok );
+	// printf( "Encountered directive '%s'\n", bk->ts.tok );
 	get_tok( &bk->ts );
 }
 
 void asm_pass( asm_block_t* bk )
 {
 	bk->offs = 0;
-	printf( "Pass %i\n", bk->pass );
+	// printf( "Pass %i\n", bk->pass );
 	asm_pass_t next_pass = bk->pass + 1;
 	get_tok( &bk->ts );
 	while ( bk->ts.tok[ 0 ] ) {
 
 		if ( bk->ts.c == ':' ) {
-			printf( "Encountered label '%s'\n", bk->ts.tok );
+			// printf( "Encountered label '%s'\n", bk->ts.tok );
 			if ( bk->pass == PASS_LABEL ) {
 				lab_t label;
 				label.name = _strdup( bk->ts.tok );
@@ -45,7 +45,7 @@ void asm_pass( asm_block_t* bk )
 					label->offs = bk->offs;
 				}
 			}
-			printf( "Set label offset to %llu\n", bk->offs );
+			// printf( "Set label offset to %llu\n", bk->offs );
 
 			skip_c( &bk->ts );
 			get_tok( &bk->ts );
@@ -57,12 +57,12 @@ void asm_pass( asm_block_t* bk )
 				skip_c( &bk->ts );
 			} while ( bk->ts.c != '\n' && bk->ts.c != EOF );
 		} else {
-			printf( "Supposed to be instruction %s, %c\n", bk->ts.tok,
+			// printf( "Supposed to be instruction %s, %c\n", bk->ts.tok,
 					bk->ts.c );
-			backend_handle_ins( bk );
+					backend_handle_ins( bk );
 		}
 	}
-	printf( "Finished %i pass, now on %i\n", bk->pass, next_pass );
+	// printf( "Finished %i pass, now on %i\n", bk->pass, next_pass );
 	bk->pass = next_pass;
 }
 

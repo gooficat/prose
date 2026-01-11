@@ -26,7 +26,7 @@ token_t* read_tokens( tok_stream_t* ts )
 			out = realloc( out, sizeof( token_t ) * tok_cap );
 		}
 		out[ num_tok++ ] = tk;
-		printf( "Token %s\n", ts->tok );
+		// printf( "Token %s\n", ts->tok );
 	}
 	out = realloc( out, sizeof( token_t ) * num_tok + sizeof( tok_type_t ) );
 	( (tok_type_t*)( &out[ num_tok ] ) )[ 0 ] = TOK_EOF;

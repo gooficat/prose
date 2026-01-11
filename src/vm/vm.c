@@ -36,10 +36,10 @@ void prose_psh( prose_vm_t* vm, uint64_t val )
 
 void prose_jmp_rel( prose_vm_t* vm )
 {
-	uint64_t prev_dbg_pc = vm->pc;
+	// uint64_t prev_dbg_pc = vm->pc;
 	vm->pc += (int8_t)vm->rom->data[ vm->pc + 1 ] +
 			  2;  // simulate the pc being at the end of the current
-	printf( "Jumped to %llu from %llu\n", vm->pc, prev_dbg_pc );
+	// printf( "Jumped to %llu from %llu\n", vm->pc, prev_dbg_pc );
 }
 void prose_psh_imm( prose_vm_t* vm )
 {
@@ -160,66 +160,66 @@ void prose_execute( prose_vm_t* vm )
 	while ( !vm->escape_condition ) {
 		switch ( vm->rom->data[ vm->pc ] ) {
 		case PROSE_JMP_REL:
-			puts( "jmp rel\n" );
+			// puts( "jmp rel\n" );
 			prose_jmp_rel( vm );
 			break;
 		case PROSE_PSH_IMM:
-			puts( "psh imm\n" );
+			// puts( "psh imm\n" );
 			prose_psh_imm( vm );
 			break;
 		case PROSE_POP_OFF:
-			puts( "pop off\n" );
+			// puts( "pop off\n" );
 			prose_pop_off( vm );
 			break;
 		case PROSE_ADD_TOP:
-			puts( "add top\n" );
+			// puts( "add top\n" );
 			prose_add_top( vm );
 			break;
 		case PROSE_SUB_TOP:
-			puts( "sub top\n" );
+			// puts( "sub top\n" );
 			prose_sub_top( vm );
 			break;
 		case PROSE_MUL_TOP:
-			puts( "mul top\n" );
+			// puts( "mul top\n" );
 			prose_mul_top( vm );
 			break;
 		case PROSE_DIV_TOP:
-			puts( "div top\n" );
+			// puts( "div top\n" );
 			prose_div_top( vm );
 			break;
 		case PROSE_HLT_CPU:
 			vm->escape_condition = PROSE_COND_HALT;
 			break;
 		case PROSE_SWP_STK:
-			puts( "swp stk\n" );
+			// puts( "swp stk\n" );
 			prose_swp_stk( vm );
 			break;
 		case PROSE_JMP_IFZ:
-			puts( "jmp ifz\n" );
+			// puts( "jmp ifz\n" );
 			prose_jmp_ifz( vm );
 			break;
 		case PROSE_JMP_IFN:
-			puts( "jmp ifn\n" );
+			// puts( "jmp ifn\n" );
 			prose_jmp_ifn( vm );
 			break;
 		case PROSE_JMP_IFP:
-			puts( "jmp ifp\n" );
+			// puts( "jmp ifp\n" );
 			prose_jmp_ifp( vm );
 			break;
 		case PROSE_IAD_TOP:
-			puts( "iad top\n" );
+			// puts( "iad top\n" );
 			prose_iad_top( vm );
 			break;
 		case PROSE_ISB_TOP:
-			puts( "isb top\n" );
+			// puts( "isb top\n" );
 			prose_isb_top( vm );
 			break;
 		case PROSE_IML_TOP:
-			puts( "iml top\n" );
+			// puts( "iml top\n" );
 			prose_iml_top( vm );
 			break;
 		case PROSE_IDV_TOP:
-			puts( "idv top\n" );
+			// puts( "idv top\n" );
 			prose_idv_top( vm );
 			break;
 		default:
