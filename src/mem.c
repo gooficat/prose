@@ -37,8 +37,8 @@ void* tracked_memdup( mem_tracker_t* mt, void* data, size_t len )
 
 char* tracked_strdup( mem_tracker_t* mt, const char* s1 )
 {
-	size_t len = strlen( s1 );
-	void* mem = tracked_malloc( mt, len + 1 );
+	size_t len = strlen( s1 ) + 1;
+	void* mem = tracked_malloc( mt, len );
 	strcpy_s( mem, len, s1 );
 	return mem;
 }

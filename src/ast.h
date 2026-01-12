@@ -68,7 +68,7 @@ vec_type( ast_var_def_t, uint8_t );
 
 typedef struct ast_node_scope
 {
-	ast_node_t* parent;
+	struct ast_node_scope* parent;
 	vec_ast_node_t_uint16_t nodes;
 	vec_ast_var_def_t_uint8_t vars;
 } ast_node_scope_t;

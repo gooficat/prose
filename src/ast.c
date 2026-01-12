@@ -17,17 +17,35 @@ ast_var_def_t gen_var_def( ast_block_t* bk, ast_node_scope_t* scope,
 	get_tok( ts );
 
 	var.name = tracked_strdup( &bk->mt, ts->tok );
+	get_tok( ts );
+
+	printf( "Variable named %s\n", var.name );
 
 	return var;
 }
+
+ast_node_scope_t ast_gen_scope( ast_block_t* bk, tok_stream_t* ts,
+								ast_node_scope_t* parent );
 
 ast_node_t ast_gen_func( ast_block_t* bk, ast_node_scope_t* scope,
 						 tok_stream_t* ts )
 {
 	ast_node_func_def_t func;
+	func.args = tracked_vec_init( bk->mt, ast_var_def_t, uint8_t );
 
-	uint8_t len = strlen( ts->tok ) + 1;
 	func.name = tracked_strdup( &bk->mt, ts->tok );
+	get_tok( ts );
+	while ( ts->tok[ 0 ] != ')' )
+	{
+		get_tok( ts );
+		vec_push( func.args ) gen_var_def( bk, scope, ts );
+	}
+	get_tok( ts );
+	get_tok( ts );
+
+	printf( "Function %s with %hu args\n", func.name, func.args.size );
+
+	func.body = ast_gen_scope( bk, ts, scope );
 
 	return (ast_node_t){
 		.type = AST_NODE_FDEF,
@@ -35,8 +53,15 @@ ast_node_t ast_gen_func( ast_block_t* bk, ast_node_scope_t* scope,
 	};
 }
 
-void ast_gen_scope( ast_block_t* bk, ast_node_scope_t* scope, tok_stream_t* ts )
+ast_node_scope_t ast_gen_scope( ast_block_t* bk, tok_stream_t* ts,
+								ast_node_scope_t* parent )
 {
+	ast_node_scope_t scope = {
+		.nodes = tracked_vec_init( bk->mt, ast_node_t, uint16_t ),
+		.vars = tracked_vec_init( bk->mt, ast_var_def_t, uint8_t ),
+		.parent = parent,
+	};
+
 	while ( ts->c != EOF )
 	{
 		get_tok( ts );
@@ -44,35 +69,21 @@ void ast_gen_scope( ast_block_t* bk, ast_node_scope_t* scope, tok_stream_t* ts )
 		if ( !strcmp( ts->tok, "fn" ) )
 		{
 			get_tok( ts );
-			vec_push( scope->nodes ) ast_gen_func( bk, scope, ts );
+			vec_push( scope.nodes ) ast_gen_func( bk, &scope, ts );
 		}
 
 		printf( "%s\n", ts->tok );
 	}
+	return scope;
 }
 
 ast_block_t gen_tree( tok_stream_t* ts )
 {
 	ast_block_t bk;
 	bk.mt = create_mem_tracker();
-	bk.root = (ast_node_t){
-		.type = AST_NODE_SCOP,
-		.scope = {
-			.parent = NULL,
-			.nodes = {
-				.data = tracked_malloc ( &bk.mt, sizeof ( ast_node_t ) ),
-				.size = 0,
-				.cap = 1,
-			},
-			.vars =  {
-				.data = tracked_malloc ( &bk.mt, sizeof ( ast_var_def_t ) ),
-				.size = 0,
-				.cap = 1,
-			},
-		},
-	};
 
-	ast_gen_scope( &bk, &bk.root.scope, ts );
+	bk.root.type = AST_NODE_SCOP;
+	bk.root.scope = ast_gen_scope( &bk, ts, NULL );
 
 	return bk;
 }
