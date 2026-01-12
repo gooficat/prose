@@ -18,12 +18,51 @@ typedef enum
 	AST_NODE_ILIT,
 	AST_NODE_CLIT,
 	AST_NODE_SLIT,
+	AST_NODE_ORDR,
 } ast_node_type_t;
+
+typedef struct ast_node ast_node_t;
 
 typedef struct
 {
+	ast_node_t* left;
+	char operator;
+	ast_node_t* right;
+} ast_node_operation_t;
+
+typedef struct
+{
+} ast_node_assignment_t;
+typedef struct
+{
+} ast_node_var_ref_t;
+
+typedef enum
+{
+	ORDER_TYPE_NONE,
+	ORDER_TYPE_CONT,
+	ORDER_TYPE_BREK,
+	ORDER_TYPE_RTRN,
+	ORDER_TYPE_GOTO,
+} order_type_t;
+
+typedef struct
+{
+	order_type_t type;
+	ast_node_t* value;
+} ast_node_order_t;
+
+struct ast_node
+{
 	ast_node_type_t type;
-} ast_node_t;
+	union
+	{
+		ast_node_operation_t operation;
+		ast_node_assignment_t assignment;
+		ast_node_var_ref_t var_ref;
+		ast_node_order_t order;
+	};
+};
 
 typedef struct
 {
