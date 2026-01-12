@@ -190,7 +190,12 @@ ast_node_t ast_gen_func( ast_block_t* bk, ast_node_scope_t* scope,
 	}
 	get_tok( ts );
 
-	printf( "Function %s with %hu args\n", func.name, func.args.size );
+	func.return_type = get_var_type( bk, scope, ts );
+
+	get_tok( ts );
+
+	printf( "Function %s with %hu args, returning type %hhu\n", func.name,
+			func.args.size, func.return_type );
 
 	func.body = ast_gen_scope( bk, ts, scope );
 
@@ -226,9 +231,8 @@ ast_node_scope_t ast_gen_scope( ast_block_t* bk, tok_stream_t* ts,
 					.type = AST_NODE_ORDR,
 					.order = order,
 				};
-				printf( "Order type %i, rval type %i, rval val %llu\n",
-						order.type, order.value->type,
-						order.value->literal.uval );
+				printf( "Order type %i, rval type %i\n", order.type,
+						order.value->type );
 			}
 			else if ( ts->tok[ 0 ] != ';' )
 			{

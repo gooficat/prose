@@ -1,5 +1,5 @@
-fn main(i32 argc, u8 argv)
+fn main(i32 argc, u8 argv) i32
 {
-    return 67;
     main(2, 3);
+    return 67;
 }

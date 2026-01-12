@@ -96,6 +96,7 @@ typedef struct ast_node_func_def
 	char* name;
 	vec_ast_var_def_t_uint8_t args;
 	ast_node_scope_t body;
+	uint8_t return_type;
 } ast_node_func_def_t;
 
 typedef struct
