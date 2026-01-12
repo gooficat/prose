@@ -29,6 +29,12 @@ const char* orders[] = {
 	"goto",
 };
 
+uint8_t get_var_type( ast_block_t* bk, ast_node_scope_t* scope,
+					  tok_stream_t* ts )
+{
+	return 1;  // placeholder
+}
+
 ast_var_def_t* ast_find_var( ast_node_scope_t* scope, tok_stream_t* ts )
 {
 	for ( uint16_t i = 0; i != scope->vars.size; ++i )
@@ -47,6 +53,20 @@ ast_var_def_t* ast_find_var( ast_node_scope_t* scope, tok_stream_t* ts )
 		return NULL;
 	}
 	get_tok( ts );
+}
+
+ast_var_def_t gen_var_def( ast_block_t* bk, ast_node_scope_t* scope,
+						   tok_stream_t* ts )
+{
+	ast_var_def_t var;
+	var.type = get_var_type( bk, scope, ts );
+	get_tok( ts );
+
+	var.name = tracked_strdup( &bk->mt, ts->tok );
+
+	printf( "Variable named %s\n", var.name );
+
+	return var;
 }
 
 ast_node_t gen_singular( ast_block_t* bk, ast_node_scope_t* scope,
@@ -112,6 +132,12 @@ ast_node_t ast_gen_expr( ast_block_t* bk, ast_node_scope_t* scope,
 {
 	ast_node_t out;
 
+	uint8_t type = get_var_type( bk, scope, ts );
+	if ( type != (uint8_t)-1 )
+	{
+		vec_push( scope->vars ) gen_var_def( bk, scope, ts );
+	}
+
 	out = gen_singular( bk, scope, ts );
 
 	if ( ts->tok[ 0 ] == '=' )
@@ -151,27 +177,6 @@ ast_node_order_t ast_gen_order( ast_block_t* bk, ast_node_scope_t* scope,
 	return order;
 }
 
-uint8_t get_var_type( ast_block_t* bk, ast_node_scope_t* scope,
-					  tok_stream_t* ts )
-{
-	return 1;  // placeholder
-}
-
-ast_var_def_t gen_var_def( ast_block_t* bk, ast_node_scope_t* scope,
-						   tok_stream_t* ts )
-{
-	ast_var_def_t var;
-	var.type = get_var_type( bk, scope, ts );
-	get_tok( ts );
-
-	var.name = tracked_strdup( &bk->mt, ts->tok );
-	get_tok( ts );
-
-	printf( "Variable named %s\n", var.name );
-
-	return var;
-}
-
 ast_node_scope_t ast_gen_scope( ast_block_t* bk, tok_stream_t* ts,
 								ast_node_scope_t* parent );
 
@@ -187,6 +192,7 @@ ast_node_t ast_gen_func( ast_block_t* bk, ast_node_scope_t* scope,
 	{
 		get_tok( ts );
 		vec_push( func.args ) gen_var_def( bk, scope, ts );
+		get_tok( ts );
 	}
 	get_tok( ts );
 
