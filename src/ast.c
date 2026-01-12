@@ -84,6 +84,7 @@ ast_node_t gen_singular( ast_block_t* bk, ast_node_scope_t* scope,
 				vec_push( node.func_call.args ) gen_singular( bk, scope, ts );
 			}
 			get_tok( ts );
+			printf( "Func call %hu args\n", node.func_call.args.size );
 		}
 	}
 	if ( is_operator( ts->tok[ 0 ] ) )
@@ -110,6 +111,19 @@ ast_node_t ast_gen_expr( ast_block_t* bk, ast_node_scope_t* scope,
 						 tok_stream_t* ts )
 {
 	ast_node_t out;
+
+	out = gen_singular( bk, scope, ts );
+
+	if ( ts->tok[ 0 ] == '=' )
+	{
+		out.type = AST_NODE_SETV;
+		ast_node_assignment_t assign;
+		assign.to_what = tracked_memdup( &bk->mt, &out, sizeof( out ) );
+		get_tok( ts );
+		out = gen_singular( bk, scope, ts );
+		assign.value = tracked_memdup( &bk->mt, &out, sizeof( out ) );
+		out.assignment = assign;
+	}
 
 	return out;
 }
@@ -216,9 +230,12 @@ ast_node_scope_t ast_gen_scope( ast_block_t* bk, tok_stream_t* ts,
 						order.type, order.value->type,
 						order.value->literal.uval );
 			}
+			else if ( ts->tok[ 0 ] != ';' )
+			{
+				vec_push( scope.nodes ) ast_gen_expr( bk, &scope, ts );
+			}
 			else
 			{
-				printf( "Node %s\n", ts->tok );
 				get_tok( ts );
 			}
 			// ast_node_t rval = gen_singular( bk, &scope, ts );
