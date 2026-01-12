@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include "mem.h"
 #include "tok.h"
+
 typedef enum
 {
 	AST_NODE_NONE,
@@ -14,9 +15,7 @@ typedef enum
 	AST_NODE_SETV,
 	AST_NODE_COND,
 	AST_NODE_MATH,
-	AST_NODE_ILIT,
-	AST_NODE_CLIT,
-	AST_NODE_SLIT,
+	AST_NODE_LITR,
 	AST_NODE_ORDR,
 } ast_node_type_t;
 
@@ -29,6 +28,25 @@ typedef struct
 	bool is_static;
 	bool is_const;
 } ast_var_def_t;
+
+typedef enum
+{
+	AST_LIT_INT,
+	AST_LIT_FLT,
+	AST_LIT_CHR,
+} ast_literal_type_t;
+
+typedef struct
+{
+	ast_literal_type_t type;
+	union
+	{
+		uintmax_t uval;
+		intmax_t ival;
+		char* cval;
+		double fval;
+	};
+} ast_node_literal_t;
 
 typedef struct
 {
@@ -50,7 +68,7 @@ typedef struct
 
 typedef enum
 {
-	ORDER_TYPE_NONE,
+	ORDER_TYPE_NONE = -1,
 	ORDER_TYPE_CONT,
 	ORDER_TYPE_BREK,
 	ORDER_TYPE_RTRN,
@@ -80,6 +98,12 @@ typedef struct ast_node_func_def
 	ast_node_scope_t body;
 } ast_node_func_def_t;
 
+typedef struct
+{
+	char* name;
+	vec_ast_node_t_uint16_t args;
+} ast_node_func_call_t;
+
 struct ast_node
 {
 	ast_node_type_t type;
@@ -91,6 +115,8 @@ struct ast_node
 		ast_node_order_t order;
 		ast_node_scope_t scope;
 		ast_node_func_def_t func_def;
+		ast_node_literal_t literal;
+		ast_node_func_call_t func_call;
 	};
 };
 
