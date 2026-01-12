@@ -41,7 +41,6 @@ ast_node_t ast_gen_func( ast_block_t* bk, ast_node_scope_t* scope,
 		vec_push( func.args ) gen_var_def( bk, scope, ts );
 	}
 	get_tok( ts );
-	get_tok( ts );
 
 	printf( "Function %s with %hu args\n", func.name, func.args.size );
 
@@ -62,17 +61,27 @@ ast_node_scope_t ast_gen_scope( ast_block_t* bk, tok_stream_t* ts,
 		.parent = parent,
 	};
 
-	while ( ts->c != EOF )
+	get_tok( ts );
+	while ( ts->tok[ 0 ] != '}' && ts->c != EOF )
 	{
-		get_tok( ts );
-
 		if ( !strcmp( ts->tok, "fn" ) )
 		{
 			get_tok( ts );
 			vec_push( scope.nodes ) ast_gen_func( bk, &scope, ts );
 		}
-
-		printf( "%s\n", ts->tok );
+		else if ( !strcmp( ts->tok, "return" ) )
+		{
+			printf( "Return " );
+			get_tok( ts );
+			printf( "%s\n", ts->tok );
+			get_tok( ts );
+			get_tok( ts );
+		}
+		else
+		{
+			printf( "'%s'\n", ts->tok );
+			get_tok( ts );
+		}
 	}
 	return scope;
 }
