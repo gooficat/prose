@@ -63,15 +63,13 @@ typedef struct
 	ast_node_t* value;
 } ast_node_order_t;
 
-typedef ast_node_t* past_node_t;
-
-vec_type( past_node_t, uint16_t );
+vec_type( ast_node_t, uint16_t );
 vec_type( ast_var_def_t, uint8_t );
 
 typedef struct ast_node_scope
 {
 	ast_node_t* parent;
-	vec_past_node_t_uint16_t nodes;
+	vec_ast_node_t_uint16_t nodes;
 	vec_ast_var_def_t_uint8_t vars;
 } ast_node_scope_t;
 

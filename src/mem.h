@@ -12,3 +12,7 @@ mem_tracker_t create_mem_tracker();
 void clear_mem_tracker( mem_tracker_t* mt );
 
 void* tracked_malloc( mem_tracker_t* mt, size_t size );
+
+void* tracked_memdup( mem_tracker_t* mt, void* data, size_t len );
+
+char* tracked_strdup( mem_tracker_t* mt, const char* s1 );

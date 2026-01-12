@@ -2,15 +2,16 @@
 #include <string.h>
 #include "asm/asm.h"
 #include "asm/backends/backends.h"
+#include "ast.h"
 #include "lex.h"
 #include "tok.h"
 #include "vm/vm.h"
 
 int main()
 {
-	set_backend( "6502" );
-	assemble( "C:\\Users\\User\\Documents\\c\\prose\\prose\\fib.ps",
-			  "C:\\Users\\User\\Documents\\c\\prose\\prose\\output.bin" );
+	// set_backend( "6502" );
+	// assemble( "C:\\Users\\User\\Documents\\c\\prose\\prose\\fib.ps",
+	// 		  "C:\\Users\\User\\Documents\\c\\prose\\prose\\output.bin" );
 
 	// tok_stream_t ts = create_tok_stream(
 	// 	"C:\\Users\\User\\Documents\\c\\prose\\prose\\test.pr" );
@@ -49,4 +50,9 @@ int main()
 
 	// free( rom );
 	// delete_prose_vm( &vm );
+
+	ast_block_t ast;
+	tok_stream_t ts = create_tok_stream(
+		"C:\\Users\\User\\Documents\\c\\prose\\prose\\test.pr" );
+	ast = gen_tree( &ts );
 }
