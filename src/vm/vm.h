@@ -2,7 +2,8 @@
 
 #include <stdint.h>
 
-enum {	// instruction set!
+enum : uint8_t
+{  // instruction set!
 	PROSE_HLT_CPU,
 	PROSE_JMP_REL,
 	PROSE_PSH_IMM,
@@ -22,19 +23,22 @@ enum {	// instruction set!
 
 };
 
-typedef enum {
+typedef enum : uint8_t
+{
 	PROSE_COND_NONE,
 	PROSE_COND_HALT,
 	PROSE_COND_EXCP,
 } prose_escape_condition_t;
 
-typedef struct {
+typedef struct
+{
 	uint64_t size;
 	uint64_t entry;
 	uint8_t data[];
 } prose_rom_t;
 
-typedef struct {
+typedef struct
+{
 	uint64_t* stack;
 	uint64_t stack_size;
 	uint64_t sp;
