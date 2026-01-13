@@ -8,7 +8,7 @@
 
 #define PRSM_MNEM_MAX 8
 
-typedef enum
+typedef enum : uint8_t
 {
 	PRSM_ARG_NON,
 	PRSM_ARG_IMM,
@@ -31,7 +31,7 @@ typedef struct
 	prsm_arg_t arg;
 } prsm_ins_t;
 
-typedef enum
+typedef enum : uint8_t
 {
 	PRSM_PROF_IMPL,
 	PRSM_PROF_SOFF,

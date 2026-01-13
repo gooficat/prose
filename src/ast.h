@@ -4,7 +4,7 @@
 #include "mem.h"
 #include "tok.h"
 
-typedef enum
+typedef enum : uint8_t
 {
 	AST_NODE_NONE,
 	AST_NODE_SCOP,
@@ -29,7 +29,7 @@ typedef struct
 	bool is_const;
 } ast_var_def_t;
 
-typedef enum
+typedef enum : uint8_t
 {
 	AST_LIT_INT,
 	AST_LIT_FLT,
@@ -66,10 +66,10 @@ typedef struct
 	ast_var_def_t* to_what;
 } ast_node_var_ref_t;
 
-typedef enum
+typedef enum : uint8_t
 {
-	ORDER_TYPE_NONE = -1,
-	ORDER_TYPE_CONT,
+	ORDER_TYPE_NONE = 0xFF,	 // ie (uint8_t)-1
+	ORDER_TYPE_CONT = 0,
 	ORDER_TYPE_BREK,
 	ORDER_TYPE_RTRN,
 	ORDER_TYPE_GOTO,

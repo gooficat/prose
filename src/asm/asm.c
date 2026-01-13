@@ -22,7 +22,7 @@ lab_t* find_label( asm_block_t* bk, const char* name )
 void asm_pass( asm_block_t* bk )
 {
 	bk->offs = 0;
-	printf( "Pass %i\n", bk->pass );
+	// printf( "Pass %i\n", bk->pass );
 	asm_pass_t next_pass = bk->pass + 1;
 	get_tok( &bk->ts );
 	while ( bk->ts.tok[ 0 ] )
@@ -30,7 +30,7 @@ void asm_pass( asm_block_t* bk )
 
 		if ( bk->ts.c == ':' )
 		{
-			printf( "Encountered label '%s'\n", bk->ts.tok );
+			// printf( "Encountered label '%s'\n", bk->ts.tok );
 			if ( bk->pass == PASS_LABEL )
 			{
 				lab_t label;
@@ -48,7 +48,7 @@ void asm_pass( asm_block_t* bk )
 					label->offs = bk->offs;
 				}
 			}
-			printf( "Set label offset to %llu\n", bk->offs );
+			// printf( "Set label offset to %llu\n", bk->offs );
 
 			skip_c( &bk->ts );
 			get_tok( &bk->ts );
@@ -67,12 +67,12 @@ void asm_pass( asm_block_t* bk )
 		}
 		else
 		{
-			printf( "Supposed to be instruction %s, %c\n", bk->ts.tok,
-					bk->ts.c );
+			// printf( "Supposed to be instruction %s, %c\n", bk->ts.tok,
+			// bk->ts.c );
 			backend_handle_ins( bk );
 		}
 	}
-	printf( "Finished %i pass, now on %i\n", bk->pass, next_pass );
+	// printf( "Finished %i pass, now on %i\n", bk->pass, next_pass );
 	bk->pass = next_pass;
 }
 

@@ -4,7 +4,7 @@
 #include "tok.h"
 #include "vec.h"
 
-typedef enum
+typedef enum : uint8_t
 {
 	PASS_LABEL,
 	PASS_ALIGN,

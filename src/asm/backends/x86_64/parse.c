@@ -15,7 +15,7 @@ typedef struct
 	int64_t disp;
 } x64_mem_arg_t;
 
-typedef enum
+typedef enum : uint8_t
 {
 	X64_ARG_REG,
 	X64_ARG_MEM,
@@ -73,7 +73,7 @@ x64_mem_arg_t parse_mem_arg( asm_block_t* bk )
 	{
 		arg.disp = num_or_label( bk );
 		get_tok( &bk->ts );
-		printf( "Displacement %lli\n", arg.disp );
+		// printf( "Displacement %lli\n", arg.disp );
 	}
 	else
 	{
@@ -87,7 +87,7 @@ x64_mem_arg_t parse_mem_arg( asm_block_t* bk )
 		{
 			arg.base = find_reg( bk );
 			get_tok( &bk->ts );
-			printf( "Base %hhu\n", arg.base->code );
+			// printf( "Base %hhu\n", arg.base->code );
 		}
 		else
 		{
@@ -106,7 +106,7 @@ x64_mem_arg_t parse_mem_arg( asm_block_t* bk )
 		{
 			arg.index = find_reg( bk );
 			get_tok( &bk->ts );
-			printf( "Index %hhu\n", arg.index->code );
+			// printf( "Index %hhu\n", arg.index->code );
 		}
 		else
 		{
@@ -125,14 +125,14 @@ x64_mem_arg_t parse_mem_arg( asm_block_t* bk )
 		{
 			arg.scale = num_or_label( bk );
 			get_tok( &bk->ts );
-			printf( "Scale %hhu\n", arg.scale );
+			// printf( "Scale %hhu\n", arg.scale );
 		}
 	}
 	// get_tok( &bk->ts );
 end:;
-	printf( "Memory arg ends at '%s', has disp %lld, scale %hhu, base %llu, "
-			"index %llu\n",
-			bk->ts.tok, arg.disp, arg.scale, arg.base, arg.index );
+	// printf( "Memory arg ends at '%s', has disp %lld, scale %hhu, base %llu, "
+	// 		"index %llu\n",
+	// 		bk->ts.tok, arg.disp, arg.scale, arg.base, arg.index );
 
 	return arg;
 }
@@ -149,7 +149,7 @@ void x64_asm_handle_ins( asm_block_t* bk )
 	// alternatively we could use newline as the end
 	{
 	parse_arg:;
-		printf( "Arg starting with '%s'\n", bk->ts.tok );
+		// printf( "Arg starting with '%s'\n", bk->ts.tok );
 		switch ( bk->ts.tok[ 0 ] )
 		{
 		case '$':
@@ -171,14 +171,14 @@ void x64_asm_handle_ins( asm_block_t* bk )
 		if ( bk->ts.tok[ 0 ] == ',' )
 		{
 			get_tok( &bk->ts );
-			printf( "Comma\n" );
+			// printf( "Comma\n" );
 			goto parse_arg;	 // i am NOT using a loop. cry harder
 		}
-		else
-		{
-			printf( "Not a comma %s\n", bk->ts.tok );
-		}
+		// else
+		// {
+		// 	// printf( "Not a comma %s\n", bk->ts.tok );
+		// }
 	}
 
-	printf( "Instruction %s with %hhu args\n", ins.name, ins.num_args );
+	// printf( "Instruction %s with %hhu args\n", ins.name, ins.num_args );
 }
