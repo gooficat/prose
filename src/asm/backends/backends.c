@@ -1,9 +1,11 @@
 #include "backends.h"
 #include <string.h>
 #include "prsm/parse.h"
+#include "x86_64/parse.h"
 
 const backend_t backends[] = {
 	{ "prose", prsm_handle_ins },
+	{ "x86_64", x64_asm_handle_ins },
 };
 
 const backend_t* current_backend = NULL;

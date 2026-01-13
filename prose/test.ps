@@ -1,6 +1,4 @@
-.section ".text"
-.global main
 
 main:
-    movq $0, %rax
+    movq -32(%rax, %rbx, 32), %rax
     ret

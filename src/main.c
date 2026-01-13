@@ -9,9 +9,9 @@
 
 int main()
 {
-	// set_backend( "6502" );
-	// assemble( "C:\\Users\\User\\Documents\\c\\prose\\prose\\fib.ps",
-	// 		  "C:\\Users\\User\\Documents\\c\\prose\\prose\\output.bin" );
+	set_backend( "x86_64" );
+	assemble( "C:\\Users\\User\\Documents\\c\\prose\\prose\\test.ps",
+			  "C:\\Users\\User\\Documents\\c\\prose\\prose\\output.bin" );
 
 	// tok_stream_t ts = create_tok_stream(
 	// 	"C:\\Users\\User\\Documents\\c\\prose\\prose\\test.pr" );
@@ -51,8 +51,8 @@ int main()
 	// free( rom );
 	// delete_prose_vm( &vm );
 
-	ast_block_t ast;
-	tok_stream_t ts = create_tok_stream(
-		"C:\\Users\\User\\Documents\\c\\prose\\prose\\test.pr" );
-	ast = gen_tree( &ts );
+	// ast_block_t ast;
+	// tok_stream_t ts = create_tok_stream(
+	// 	"C:\\Users\\User\\Documents\\c\\prose\\prose\\test.pr" );
+	// ast = gen_tree( &ts );
 }
