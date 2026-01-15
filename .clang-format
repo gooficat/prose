@@ -4,7 +4,7 @@ BasedOnStyle: LLVM
 IndentWidth: 4
 TabWidth: 4
 UseTab: true
-ColumnLimit: 80
+ColumnLimit: 120
 BreakBeforeBraces: Allman
 
 AllowShortIfStatementsOnASingleLine: false
@@ -16,8 +16,8 @@ AlignConsecutiveAssignments: true
 AlignConsecutiveDeclarations: true
 AlignOperands: true
 AlignTrailingComments: true
-BinPackArguments: false
-BinPackParameters: false
+BinPackArguments: true
+BinPackParameters: true
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializersBeforeComma: false
 BreakAfterJavaFieldAnnotations: false

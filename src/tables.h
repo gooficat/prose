@@ -119,14 +119,20 @@ typedef struct
 
 typedef struct
 {
-	const char *name;
-	uint8_t		codes[ 4 ];	 // rex, pf, 0f, opc
-	uint8_t		n_codes : 4;
-	uint8_t		extension;
-	AsmParam	params[ MAX_ARGS ];
+	uint8_t	 codes[ 4 ];  // rex, pf, 0f, opc
+	uint8_t	 n_codes : 4;
+	uint8_t	 extension;
+	AsmParam params[ MAX_ARGS ];
 } AsmOpc;
 
-extern const char	*MNEMONICS[];
+typedef struct
+{
+	const char *name;
+	uint16_t	index;
+	uint8_t		vnum;
+} AsmMnem;
+
+extern const AsmMnem MNEMONICS[];
 extern const uint8_t NUM_MNEMONICS;
 
 extern AsmOpc	OPCODES[];
