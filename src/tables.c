@@ -1,29 +1,31 @@
 #include "tables.h"
 
 AsmReg REGISTERS[] = {
-    {"AX", 0x00, REG_GEN, REG_WORD},  {"CX", 0x01, REG_GEN, REG_WORD},
-    {"DX", 0x02, REG_GEN, REG_WORD},  {"BX", 0x03, REG_GEN, REG_WORD},
+	{ "AX", 0x00, REG_GEN, REG_WORD },	{ "CX", 0x01, REG_GEN, REG_WORD },
+	{ "DX", 0x02, REG_GEN, REG_WORD },	{ "BX", 0x03, REG_GEN, REG_WORD },
 
-    {"SP", 0x04, REG_GEN, REG_WORD},  {"BP", 0x05, REG_GEN, REG_WORD},
-    {"SI", 0x06, REG_GEN, REG_WORD},  {"DI", 0x07, REG_GEN, REG_WORD},
+	{ "SP", 0x04, REG_GEN, REG_WORD },	{ "BP", 0x05, REG_GEN, REG_WORD },
+	{ "SI", 0x06, REG_GEN, REG_WORD },	{ "DI", 0x07, REG_GEN, REG_WORD },
 
-    {"ES", 0x00, REG_SEG, REG_WORD},  {"CS", 0x01, REG_SEG, REG_WORD},
-    {"SS", 0x02, REG_SEG, REG_WORD},  {"DS", 0x03, REG_SEG, REG_WORD},
-    {"FS", 0x04, REG_SEG, REG_WORD},  {"GS", 0x05, REG_SEG, REG_WORD},
+	{ "ES", 0x00, REG_SEG, REG_WORD },	{ "CS", 0x01, REG_SEG, REG_WORD },
+	{ "SS", 0x02, REG_SEG, REG_WORD },	{ "DS", 0x03, REG_SEG, REG_WORD },
+	{ "FS", 0x04, REG_SEG, REG_WORD },	{ "GS", 0x05, REG_SEG, REG_WORD },
 
-    {"EAX", 0x00, REG_GEN, REG_DWOR}, {"ECX", 0x01, REG_GEN, REG_DWOR},
-    {"EDX", 0x02, REG_GEN, REG_DWOR}, {"EBX", 0x03, REG_GEN, REG_DWOR},
+	{ "EAX", 0x00, REG_GEN, REG_DWOR }, { "ECX", 0x01, REG_GEN, REG_DWOR },
+	{ "EDX", 0x02, REG_GEN, REG_DWOR }, { "EBX", 0x03, REG_GEN, REG_DWOR },
 
-    {"ESP", 0x04, REG_GEN, REG_DWOR}, {"EBP", 0x05, REG_GEN, REG_DWOR},
-    {"ESI", 0x06, REG_GEN, REG_DWOR}, {"EDI", 0x07, REG_GEN, REG_DWOR},
+	{ "ESP", 0x04, REG_GEN, REG_DWOR }, { "EBP", 0x05, REG_GEN, REG_DWOR },
+	{ "ESI", 0x06, REG_GEN, REG_DWOR }, { "EDI", 0x07, REG_GEN, REG_DWOR },
 
 };
-uint8_t NUM_REGS = {};
+uint8_t NUM_REGS = sizeof( REGISTERS ) / sizeof( *REGISTERS );
 
-const char *MNEMS[] = {""};
-const uint8_t NUM_MNEMS = sizeof(MNEMS) / sizeof(*MNEMS);
+const char	 *MNEMONICS[]	= { "" };
+const uint8_t NUM_MNEMONICS = sizeof( MNEMONICS ) / sizeof( *MNEMONICS );
 
 AsmOpc OPCODES[] = {
-    {},
+	{
+		"ADD",
+	},
 };
 uint16_t NUM_OPCODES;
